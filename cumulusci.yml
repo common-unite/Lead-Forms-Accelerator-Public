@@ -1,0 +1,61 @@
+minimum_cumulusci_version: '3.84.3'
+project:
+    name: cUnite_LeadFormsAccelerator
+    package:
+        name: 'Flow Tool Kit: Lead Forms Accelerator'
+        namespace: FlowToolKit
+        api_version: '60.0'
+    dependencies:
+        - github: 'https://github.com/common-unite/cUnite_FormBuilder'
+    git:
+        repo_url: 'https://github.com/common-unite/Lead-Forms-Accelerator'
+
+    source_format: sfdx
+
+orgs:
+    scratch:
+        dev_namespaced:
+            config_file: orgs/dev.json
+            days: 30
+            namespaced: True
+
+flows:
+
+    release_2gp_beta:
+        steps:
+            90:
+                task: github_copy_subtree
+                options:
+                    tag_name: "latest_beta"
+
+    release_2gp_production:
+        steps:
+            90:
+                task: github_copy_subtree
+                options:
+                    tag_name: "latest"
+
+tasks:
+
+    robot:
+        options:
+            suites: robot/cUnite_FlowDuplicateCheck/tests
+            options:
+                outputdir: robot/cUnite_FlowDuplicateCheck/results
+
+    robot_testdoc:
+        options:
+            path: robot/cUnite_FlowDuplicateCheck/tests
+            output: robot/cUnite_FlowDuplicateCheck/doc/cUnite_FlowDuplicateCheck_tests.html
+
+    run_tests:
+        options:
+            required_org_code_coverage_percent: 75
+
+    github_copy_subtree:
+        options:
+            repo_url: "https://github.com/common-unite/Lead-Forms-Accelerator-Public"
+            branch: "main"
+            create_release: true
+            release_body: true
+            include: ["cumulusci.yml","sfdx-project.json","orgs/"]
