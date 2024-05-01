@@ -52,6 +52,11 @@ tasks:
         options:
             required_org_code_coverage_percent: 75
 
+
+    create_package_version:
+        options:
+            post_install_script: "LeadForms_PostInstallClass"
+
     github_copy_subtree:
         options:
             repo_url: "https://github.com/common-unite/Lead-Forms-Accelerator-Public"
